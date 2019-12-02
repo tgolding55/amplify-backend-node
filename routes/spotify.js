@@ -48,7 +48,7 @@ router.get("/callback", function(req, res) {
 });
 
 router.get("/q", (req, res) => {
-  query = "pompeii";
+ 
   const fetchOptions = {
     url:
       "https://api.spotify.com/v1/search?q=" + req.query.search + "&type=track",
@@ -72,4 +72,37 @@ router.get("/q", (req, res) => {
   });
 });
 
+
+router.get("/getPlaylists",(req, res) => {
+ const fetchOptions = {
+  url:
+    "https://api.spotify.com/v1/me/playlists", 
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + req.query.auth
+  }
+  
+
+  
+};
+
+request.get(fetchOptions, (error, response, body) => {
+  const json = JSON.parse(body).items.map(item  => {return{
+ 
+
+  }}
+  )
+  res.json(json);
+  console.log(json)
+});
+
+
+
+})
+
+
+
 module.exports = router;
+
+
