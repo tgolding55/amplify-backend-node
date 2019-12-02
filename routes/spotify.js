@@ -48,81 +48,77 @@ router.get("/callback", function(req, res) {
 });
 
 router.get("/search", (req, res) => {
-  const fetchOptions = {
-    url:
-      "https://api.spotify.com/v1/search?q=" + req.query.search + "&type=track",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + req.query.auth
+  request.get(
+    fetchOptions(
+      req.query.auth,
+      `https://api.spotify.com/v1/search?q=${req.query.search}&type=track`
+    ),
+    (error, response, body) => {
+      const json = JSON.parse(body).tracks.items.map(song => {
+        return {
+          id: song.id,
+          uri: song.uri,
+          duration: song.duration_ms,
+          name: song.name,
+          band: song.artists[0].name,
+          image: song.album.images[0]["url"]
+        };
+      });
+      res.json(json);
     }
-  };
-  request.get(fetchOptions, (error, response, body) => {
-    const json = JSON.parse(body).tracks.items.map(song => {
-      return {
-        id: song.id,
-        uri: song.uri,
-        duration: song.duration_ms,
-        name: song.name,
-        band: song.artists[0].name,
-        image: song.album.images[0]["url"]
-      };
-    });
-    res.json(json);
-    console.log(body);
-  });
+  );
 });
 
 router.get("/playlists", (req, res) => {
-  const fetchOptions = {
-    url: "https://api.spotify.com/v1/me/playlists",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + req.query.auth
+  request.get(
+    fetchOptions(req.query.auth, "https://api.spotify.com/v1/me/playlists"),
+    (error, response, body) => {
+      const json = JSON.parse(body).items.map(item => {
+        return {
+          description: item.description,
+          id: item.id,
+          uri: item.uri,
+          image: item.images[0],
+          name: item.name,
+          trackNum: item.tracks.total
+        };
+      });
+      res.json(json);
     }
-  };
-
-  request.get(fetchOptions, (error, response, body) => {
-    const json = JSON.parse(body).items.map(item => {
-      return {
-        description: item.description,
-        id: item.id,
-        uri: item.uri,
-        image: item.images[0],
-        name: item.name,
-        trackNum: item.tracks.total
-      };
-    });
-    res.json(json);
-    console.log(json);
-  });
+  );
 });
 
 router.get("/toptracks", (req, res) => {
-  const fetchOptions = {
-    url:
-      "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=20",
+  request.get(
+    fetchOptions(
+      req.query.auth,
+      "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=20"
+    ),
+    (error, response, body) => {
+      const json = JSON.parse(body).items.map(song => {
+        return {
+          id: song.id,
+          uri: song.uri,
+          duration: song.duration_ms,
+          name: song.name,
+          band: song.artists[0].name,
+          image: song.album.images[0]["url"]
+        };
+      });
+      res.json(json);
+    }
+  );
+});
+
+const fetchOptions = (auth, url) => {
+  return {
+    url: url,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "Bearer " + req.query.auth
+      Authorization: "Bearer " + auth
     }
   };
-
-  request.get(fetchOptions, (error, response, body) => {
-    const json = JSON.parse(body).items.map(song => {
-      return {
-        id: song.id,
-        uri: song.uri,
-        duration: song.duration_ms,
-        name: song.name,
-        band: song.artists[0].name,
-        image: song.album.images[0]["url"]
-      };
-    });
-    res.json(json);
-  });
-});
+};
 
 module.exports = router;
