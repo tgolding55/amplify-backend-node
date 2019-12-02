@@ -48,15 +48,14 @@ router.get("/callback", function(req, res) {
 });
 
 router.get("/q", (req, res) => {
-  console.log(req._parsedURL);
-  console.log("dsfsdf");
+  query = "pompeii";
   const fetchOptions = {
-    url: "https://api.spotify.com/v1/search?q=pompeii&type=track",
+    url:
+      "https://api.spotify.com/v1/search?q=" + req.query.search + "&type=track",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization:
-        "Bearer BQCrV7_8v1EQYowkOCCjL_muct9za4FuEctSceLQkTLQQgZGzGMZENWipnuXNmjYst4uti1OlMmhPLDjg-gZ9VkTK4Qarbp6Dv8hTljnHlAvGtweGCKEwaO9pIITxkbm3Vl7dG5DTABRGC-nStoPnFcfmISjVEatlnFMuh4YdfBo4yM_0lrym4_AkFrtHOOKeJfHkRZmBO7bK-QFRVfpvp3deRim29J5XsDbdzwnVcCn0rK9D8srJAjdWhZ31AZtY1LDbSjini_ks97q"
+      Authorization: "Bearer " + req.query.auth
     }
   };
   request.get(fetchOptions, (error, response, body) => {
