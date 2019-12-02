@@ -61,6 +61,7 @@ router.get("/search", (req, res) => {
     const json = JSON.parse(body).tracks.items.map(song => {
       return {
         id: song.id,
+        uri: song.uri,
         duration: song.duration_ms,
         name: song.name,
         band: song.artists[0].name,
@@ -68,6 +69,7 @@ router.get("/search", (req, res) => {
       };
     });
     res.json(json);
+    console.log(body);
   });
 });
 
@@ -86,6 +88,7 @@ router.get("/playlists", (req, res) => {
       return {
         description: item.description,
         id: item.id,
+        uri: item.uri,
         image: item.images[0],
         name: item.name,
         trackNum: item.tracks.total
@@ -111,6 +114,7 @@ router.get("/toptracks", (req, res) => {
     const json = JSON.parse(body).items.map(song => {
       return {
         id: song.id,
+        uri: song.uri,
         duration: song.duration_ms,
         name: song.name,
         band: song.artists[0].name,
