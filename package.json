@@ -1,0 +1,13 @@
+{
+  "name": "amplify-backend-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.15.4",
+    "querystring": "^0.2.0",
+    "request": "^2.81.0"
+  }
+}
