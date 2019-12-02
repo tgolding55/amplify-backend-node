@@ -14,7 +14,7 @@ router.get("/login", function(req, res) {
       querystring.stringify({
         response_type: "code",
         client_id: process.env.SPOTIFY_CLIENT_ID,
-        scope: "user-read-private user-read-email",
+        scope: "user-read-private user-read-email user-top-read",
         redirect_uri
       })
   );
@@ -47,8 +47,7 @@ router.get("/callback", function(req, res) {
   });
 });
 
-router.get("/q", (req, res) => {
- 
+router.get("/search", (req, res) => {
   const fetchOptions = {
     url:
       "https://api.spotify.com/v1/search?q=" + req.query.search + "&type=track",
@@ -72,37 +71,54 @@ router.get("/q", (req, res) => {
   });
 });
 
+router.get("/playlists", (req, res) => {
+  const fetchOptions = {
+    url: "https://api.spotify.com/v1/me/playlists",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + req.query.auth
+    }
+  };
 
-router.get("/getPlaylists",(req, res) => {
- const fetchOptions = {
-  url:
-    "https://api.spotify.com/v1/me/playlists", 
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + req.query.auth
-  }
-  
-
-  
-};
-
-request.get(fetchOptions, (error, response, body) => {
-  const json = JSON.parse(body).items.map(item  => {return{
- 
-
-  }}
-  )
-  res.json(json);
-  console.log(json)
+  request.get(fetchOptions, (error, response, body) => {
+    const json = JSON.parse(body).items.map(item => {
+      return {
+        description: item.description,
+        id: item.id,
+        image: item.images[0],
+        name: item.name,
+        trackNum: item.tracks.total
+      };
+    });
+    res.json(json);
+    console.log(json);
+  });
 });
 
+router.get("/toptracks", (req, res) => {
+  const fetchOptions = {
+    url:
+      "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=20",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + req.query.auth
+    }
+  };
 
-
-})
-
-
+  request.get(fetchOptions, (error, response, body) => {
+    const json = JSON.parse(body).items.map(song => {
+      return {
+        id: song.id,
+        duration: song.duration_ms,
+        name: song.name,
+        band: song.artists[0].name,
+        image: song.album.images[0]["url"]
+      };
+    });
+    res.json(json);
+  });
+});
 
 module.exports = router;
-
-
