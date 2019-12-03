@@ -8,8 +8,6 @@ app.use(bodyParser.json());
 app.use("/spotify", spotifyRouter);
 
 let port = process.env.PORT || 3001;
-console.log(
-  `Listening on port ${port}. Go /login to initiate authentication flow.`
-);
+console.log(`Listening on port ${port}.`);
 
 app.listen(port);

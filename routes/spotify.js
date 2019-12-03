@@ -133,6 +133,22 @@ router.post("/playlists", (req, res) => {
   );
 });
 
+router.post("/playlists/:playlistId", (req, res) => {
+  request.post(
+    fetchOptions(
+      req.query.auth,
+      "https://api.spotify.com/v1/playlists/" +
+        req.params.playlistId +
+        "/tracks?uris=" +
+        req.query.songURIs
+    ),
+    (error, response, body) => {
+      const json = JSON.parse(body);
+      res.json(json);
+    }
+  );
+});
+
 const fetchOptions = (auth, url, body) => {
   return !body
     ? {
