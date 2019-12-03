@@ -71,8 +71,6 @@ router.get("/search", (req, res) => {
 });
 
 router.get("/playlists", (req, res) => {
-  console.log("get");
-
   request.get(
     fetchOptions(req.query.auth, "https://api.spotify.com/v1/me/playlists"),
     (error, response, body) => {
@@ -115,13 +113,6 @@ router.get("/toptracks", (req, res) => {
 
 router.post("/playlists", (req, res) => {
   const body = JSON.stringify(req.body);
-  console.log(
-    fetchOptions(
-      req.query.auth,
-      "https://api.spotify.com/v1/me/playlists",
-      body
-    )
-  );
   request.post(
     fetchOptions(
       req.query.auth,
@@ -164,20 +155,15 @@ const fetchOptions = (auth, url, body) => {
 };
 
 router.get("/lyrics", (req, res) => {
-  const artist = req.query.artist
-  const track = req.query.track
-  request.get (`https://orion.apiseeds.com/api/music/lyric/${artist}/${track}?apikey=1AnWo1GT3xEA6PC7g69iGLmp85720sjzXRJffPdDEM9vwdZGHBTgWd34AW6WFbGA`,(error, response, body) => {
-    const json = JSON.parse(body)
-    res.json(json)
-  }
-
- 
-  )
-
-}
-
+  const artist = req.query.artist;
+  const track = req.query.track;
+  request.get(
+    `https://orion.apiseeds.com/api/music/lyric/${artist}/${track}?apikey=1AnWo1GT3xEA6PC7g69iGLmp85720sjzXRJffPdDEM9vwdZGHBTgWd34AW6WFbGA`,
+    (error, response, body) => {
+      const json = JSON.parse(body);
+      res.json(json);
+    }
   );
-
-  
+});
 
 module.exports = router;
