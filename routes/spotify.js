@@ -71,6 +71,8 @@ router.get("/search", (req, res) => {
 });
 
 router.get("/playlists", (req, res) => {
+  console.log("get");
+
   request.get(
     fetchOptions(req.query.auth, "https://api.spotify.com/v1/me/playlists"),
     (error, response, body) => {
@@ -111,15 +113,54 @@ router.get("/toptracks", (req, res) => {
   );
 });
 
-const fetchOptions = (auth, url) => {
-  return {
-    url: url,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + auth
+router.post("/playlists", (req, res) => {
+  const body = JSON.stringify(req.body);
+  console.log(
+    fetchOptions(
+      req.query.auth,
+      "https://api.spotify.com/v1/me/playlists",
+      body
+    )
+  );
+  request.post(
+    fetchOptions(
+      req.query.auth,
+      "https://api.spotify.com/v1/me/playlists",
+      body
+    ),
+    (error, response, body) => {
+      const parsedBody = JSON.parse(body);
+      const json = {
+        description: parsedBody.description,
+        id: parsedBody.id,
+        uri: parsedBody.uri,
+        name: parsedBody.name,
+        trackNum: 0
+      };
+      res.json(json);
     }
-  };
+  );
+});
+
+const fetchOptions = (auth, url, body) => {
+  return !body
+    ? {
+        url: url,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth
+        }
+      }
+    : {
+        url: url,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth
+        },
+        form: body
+      };
 };
 
 module.exports = router;
