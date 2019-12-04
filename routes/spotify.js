@@ -93,7 +93,9 @@ router.get("/toptracks", (req, res) => {
   request.get(
     fetchOptions(
       req.query.auth,
-      "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=20"
+      "https://api.spotify.com/v1/me/top/tracks?time_range=" +
+        req.query.time_range +
+        "&limit=20"
     ),
     (error, response, body) => {
       const json = JSON.parse(body).items.map(song => {
