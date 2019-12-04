@@ -151,6 +151,31 @@ router.post("/playlists/:playlistId", (req, res) => {
   );
 });
 
+router.get("/playlists/:playlistId", (req, res) => {
+  request.get(
+    fetchOptions(
+      req.query.auth,
+      "https://api.spotify.com/v1/playlists/" +
+        req.params.playlistId +
+        "/tracks"
+    ),
+    (error, response, body) => {
+      const json = JSON.parse(body).items.map(songObj => {
+        const song = songObj.track;
+        return {
+          id: song.id,
+          uri: song.uri,
+          duration: song.duration_ms,
+          name: song.name,
+          band: song.artists[0].name,
+          image: song.album.images[0]["url"]
+        };
+      });
+      res.json(json);
+    }
+  );
+});
+
 const fetchOptions = (auth, url, body) => {
   return !body
     ? {
