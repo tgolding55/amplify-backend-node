@@ -167,7 +167,8 @@ router.get("/playlists/featured", (req, res) => {
           id: playlist.id,
           uri: playlist.uri,
           name: playlist.name,
-          trackNum: playlist.tracks.total
+          trackNum: playlist.tracks.total,
+          image: playlist.images[0]
         };
       });
       res.json(json);
