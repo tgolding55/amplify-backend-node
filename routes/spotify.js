@@ -55,16 +55,19 @@ router.get("/search", (req, res) => {
       `https://api.spotify.com/v1/search?q=${req.query.search}&type=track`
     ),
     (error, response, body) => {
-      const json = JSON.parse(body).tracks.items.map(song => {
-        return {
-          id: song.id,
-          uri: song.uri,
-          duration: song.duration_ms,
-          name: song.name,
-          band: song.artists[0].name,
-          image: song.album.images[0]["url"]
-        };
-      });
+      const parsedJson = JSON.parse(body);
+      const json = parsedJson.tracks
+        ? parsedJson.tracks.items.map(song => {
+            return {
+              id: song.id,
+              uri: song.uri,
+              duration: song.duration_ms,
+              name: song.name,
+              band: song.artists[0].name,
+              image: song.album.images[0]["url"]
+            };
+          })
+        : "No songs found!";
       res.json(json);
     }
   );
