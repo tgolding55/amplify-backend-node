@@ -154,6 +154,27 @@ router.post("/playlists/:playlistId", (req, res) => {
   );
 });
 
+router.get("/playlists/featured", (req, res) => {
+  request.get(
+    fetchOptions(
+      req.query.auth,
+      "https://api.spotify.com/v1/browse/featured-playlists?country=GB&limit=3"
+    ),
+    (error, response, body) => {
+      const json = JSON.parse(body).playlists.items.map(playlist => {
+        return {
+          description: playlist.description,
+          id: playlist.id,
+          uri: playlist.uri,
+          name: playlist.name,
+          trackNum: playlist.tracks.total
+        };
+      });
+      res.json(json);
+    }
+  );
+});
+
 router.get("/playlists/:playlistId", (req, res) => {
   request.get(
     fetchOptions(
