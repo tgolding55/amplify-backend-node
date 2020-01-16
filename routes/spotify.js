@@ -6,7 +6,8 @@ const cors = require("cors");
 router.all("*", cors());
 
 const redirect_uri =
-  process.env.REDIRECT_URI || "http://localhost:3001/spotify/callback";
+  process.env.REDIRECT_URI ||
+  "https://amplify-backend.herokuapp.com/spotify/callback";
 
 router.get("/login", function(req, res) {
   res.redirect(
@@ -43,7 +44,8 @@ router.get("/callback", function(req, res) {
   };
   request.post(authOptions, function(error, response, body) {
     const access_token = body.access_token;
-    let uri = process.env.FRONTEND_URI || "http://localhost:3000/auth";
+    let uri =
+      process.env.FRONTEND_URI || "https://amplify-front.herokuapp.com/auth";
     res.redirect(uri + "?access_token=" + access_token);
   });
 });
